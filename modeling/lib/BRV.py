@@ -1,27 +1,29 @@
 import math
 import time
 
-
-def _random_base(a, m, y):
-    return (a * y + m) % m
+def _random_base(a, m, y, c):
+    return (1664525 * y + 1) % m
 
 
 def random(after_dot: int = 5, count: int = 10):
     main_list = []
     nod_dict = {
-        5: {"a": 33333, "m": 100000},
-        4: {"a": 7777, "m": 10000},
-        3: {"a": 999, "m": 1000},
-        2: {"a": 11, "m": 100},
-        1: {"a": 7, "m": 10}
+        5: {"c": 33343, "m": 2 ** 32},
+        4: {"c": 7789, "m": 2 ** 32},
+        3: {"c": 557, "m": 2 ** 32},
+        2: {"c": 11, "m": 2 ** 32},
+        1: {"c": 7, "m": 2 ** 32}
     }
     y = time.time() % 1
-    y = float('{:.1f}'.format(y))
+    #y = float('{:.1f}'.format(y))
     print(y)
+    c = nod_dict.get(after_dot).get("c")
+    m = nod_dict.get(after_dot).get("m")
     for i in range(count):
-        result = (_random_base(nod_dict.get(after_dot).get("a"), nod_dict.get(after_dot).get("m"), y)) % 1
+        result = _random_base(3, m, y, c) % 1
+        #result = float('{:.1f}'.format(result))
         main_list.append(result)
-        y = float('{:.1f}'.format(result))
+        y = result
     return main_list
 
 
