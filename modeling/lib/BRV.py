@@ -21,9 +21,9 @@ def random(after_dot: int = 5, count: int = 10):
     m = nod_dict.get(after_dot).get("m")
     for i in range(count):
         result = _random_base(3, m, y, c) % 1
-        #result = float('{:.1f}'.format(result))
-        main_list.append(result)
         y = result
+        result = float('{:.5f}'.format(result))
+        main_list.append(result)
     return main_list
 
 
@@ -32,4 +32,4 @@ def random(after_dot: int = 5, count: int = 10):
 
 
 if __name__ == '__main__':
-    print(random(1))
+    print(random())
