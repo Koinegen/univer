@@ -1,15 +1,15 @@
-import math
 import time
+import math
 
 def _random_base(m, y):
-    return (1664525 * y + 1) % m
+    return (1664543 * y + 1) % m
 
 
 def random(after_dot: int = 5, count: int = 10):
     main_list = []
     y = time.time() % 1
     print(y)
-    m = 2 ** 32
+    m = 1664501
     for i in range(count):
         result = _random_base(m, y) % 1
         y = result
