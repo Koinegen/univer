@@ -1,5 +1,4 @@
 import time
-import math
 
 def _random_base(m, y):
     return (1664543 * y + 1) % m
