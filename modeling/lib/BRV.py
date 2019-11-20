@@ -1,16 +1,16 @@
 import time
 
-def _random_base(m, y):
-    return (1664543 * y + 1) % m
+
+def _random_base(y):
+    return (1664543 * y + 1) % 1664501
 
 
 def random(after_dot: int = 5, count: int = 10):
     main_list = []
     y = time.time() % 1
     print(y)
-    m = 1664501
     for i in range(count):
-        result = _random_base(m, y) % 1
+        result = _random_base(y) % 1
         y = result
         result = float('{:.{}f}'.format(result, after_dot))
         main_list.append(result)
