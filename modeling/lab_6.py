@@ -1,6 +1,7 @@
 from univer.modeling.lib.BRV import random
 from math import e
 
+
 class CalendarLine:
 
     def __init__(self, arr_time, prev_time=None, lambd = 1, t_obs=2):
@@ -26,6 +27,7 @@ class CalendarLine:
     def get_t0(self):
         return self.t0
 
+
 threads = 2
 t_obs = 2
 queue = 4
@@ -38,9 +40,34 @@ count = 500
 0 - Очереди нет, все приходящие заявки, которые не могут быть обслуженными отбрасываются
 Любое целое число - очередь длинной с заданное число.
 :param lambd: Плотность потока.
+:param count: 
 """
+
 
 def generate_list(count, lambd=1, t_obs=2):
     return_list = []
     random_list = random(count=count)
-    first = CalendarLine(random_list[0], lambd=lambd, t_obs=t_obs)
+    for i in random_list:
+        prev = 0
+        return_list.append(CalendarLine(i, prev, lambd=lambd, t_obs=t_obs))
+    return return_list
+
+
+t_wait = []
+t_in = []
+t_sys = []
+L = 0
+
+
+def create_threads(count=2):
+    return [{i: 0} for i in range(count)]
+
+
+req_list = generate_list(count, lambd, t_obs)
+threads_inst = create_threads()
+
+
+#for num, req in enumerate(req_list):
+
+
+
