@@ -1,5 +1,6 @@
 from univer.modeling.lib.BRV import random
 from math import e
+from univer.modeling.lib.lib_func_for_6_lab import table_output
 
 
 class CalendarLine:
@@ -70,9 +71,10 @@ threads_inst = create_threads()
 
 
 def get_min_time_thread():
-    time = 0
+    time = 99999999
     link = None
     for i in threads_inst:
+        print(i)
         if i.get("time") <= time:
             time = i.get("time")
             link = i
@@ -89,15 +91,18 @@ for num, req in enumerate(req_list):
         min_que = get_min_time_thread()
         if min_que.get("time") < req.get_t0():
             t_wait.append(0)
-            min_que['time'] += req.get_tobs()
+            min_que['time'] += req.get_tobs() + req.get_t0()
             t_sys.append(min_que['time'])
             t_in.append(t_sys[num] - req.get_t0())
+            print('check1')
             continue
         if min_que.get("time") > req.get_t0():
             t_wait.append(min_que.get('time') - req.get_t0())
             min_que["time"] += req.get_tobs() + t_wait[num]
             t_sys.append(min_que["time"])
             t_in.append(t_sys[num] - req.get_t0())
+            print('check2')
             continue
 
-
+table_output(count=count, t0=[i.get_t0() for i in req_list], t_obs=[i.get_tobs() for i in req_list],
+             t_wait=t_wait, t_in=t_in, t_sys=t_sys)

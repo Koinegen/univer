@@ -2,22 +2,14 @@ from prettytable import PrettyTable
 
 
 
-def table_output(vars_dict: dict):
-    count = len(vars_dict.keys())
-    table_head = ''.join("|\t{}\t|".format(i) for i in vars_dict.keys())
-    second_str = ''.join("||" for _ in vars_dict.keys())
-    print(table_head)
-    print(second_str)
+def table_output(**kwargs):
+    x = PrettyTable()
+    x.add_column("N", range(1, kwargs.get("count") + 1))
+    x.add_column("T_0", kwargs.get("t0"))
+    x.add_column("T_ожидания", kwargs.get("t_wait"))
+    x.add_column("T_прибывания", kwargs.get("t_in"))
+    x.add_column("T_системное", kwargs.get("t_sys"))
+    x.add_column("T_обслуживания", kwargs.get("t_obs"))
+    print(x)
 
 
-
-dt = {
-    1: "gfk",
-    2: "gk",
-    3: "gkgf",
-    4: "gkw",
-    5: "gk31",
-    6: "gk3",
-    7: "gk435"
-}
-table_output(dt)
