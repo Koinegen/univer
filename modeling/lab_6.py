@@ -47,9 +47,11 @@ count = 500
 def generate_list(count, lambd=1, t_obs=2):
     return_list = []
     random_list = random(count=count)
+    prev = 0
     for i in random_list:
-        prev = 0
-        return_list.append(CalendarLine(i, prev, lambd=lambd, t_obs=t_obs))
+        a = CalendarLine(i, prev, lambd=lambd, t_obs=t_obs)
+        return_list.append(a)
+        prev = a.get_t0()
     return return_list
 
 
@@ -60,14 +62,42 @@ L = 0
 
 
 def create_threads(count=2):
-    return [{i: 0} for i in range(count)]
+    return [{"time": 0} for _ in range(count)]
 
 
 req_list = generate_list(count, lambd, t_obs)
 threads_inst = create_threads()
 
 
-#for num, req in enumerate(req_list):
+def get_min_time_thread():
+    time = 0
+    link = None
+    for i in threads_inst:
+        if i.get("time") <= time:
+            time = i.get("time")
+            link = i
+    return link
 
+
+for num, req in enumerate(req_list):
+    if num == 0:
+        t_wait.append(0)
+        t_in.append(req.get_tobs())
+        get_min_time_thread()["time"] += req.get_t0() + req.get_tobs()
+        t_sys.append(req.get_t0() + req.get_tobs())
+    else:
+        min_que = get_min_time_thread()
+        if min_que.get("time") < req.get_t0():
+            t_wait.append(0)
+            min_que['time'] += req.get_tobs()
+            t_sys.append(min_que['time'])
+            t_in.append(t_sys[num] - req.get_t0())
+            continue
+        if min_que.get("time") > req.get_t0():
+            t_wait.append(min_que.get('time') - req.get_t0())
+            min_que["time"] += req.get_tobs() + t_wait[num]
+            t_sys.append(min_que["time"])
+            t_in.append(t_sys[num] - req.get_t0())
+            continue
 
 
