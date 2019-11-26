@@ -85,20 +85,21 @@ for num, req in enumerate(req_list):
     if num == 0:
         t_wait.append(0)
         t_in.append(req.get_tobs())
-        get_min_time_thread()["time"] += req.get_t0() + req.get_tobs()
+        get_min_time_thread()["time"] = req.get_t0() + req.get_tobs()
         t_sys.append(req.get_t0() + req.get_tobs())
     else:
         min_que = get_min_time_thread()
+        print(req.get_t0())
         if min_que.get("time") < req.get_t0():
             t_wait.append(0)
-            min_que['time'] += req.get_tobs() + req.get_t0()
+            min_que['time'] = req.get_tobs() + req.get_t0()
             t_sys.append(min_que['time'])
             t_in.append(t_sys[num] - req.get_t0())
             print('check1')
             continue
         if min_que.get("time") > req.get_t0():
             t_wait.append(min_que.get('time') - req.get_t0())
-            min_que["time"] += req.get_tobs() + t_wait[num]
+            min_que["time"] = req.get_tobs() + t_wait[num]
             t_sys.append(min_que["time"])
             t_in.append(t_sys[num] - req.get_t0())
             print('check2')
