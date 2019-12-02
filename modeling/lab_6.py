@@ -29,10 +29,10 @@ class CalendarLine:
         return self.t0
 
 
-threads = 2
-t_obs = 2
-queue = 4
-lambd = 1
+threads = 1
+t_obs = 3.33
+queue = None
+lambd = 0.25
 count = 500
 """
 :param threads: Кол-во потоков (Не меньше 1)
@@ -74,7 +74,7 @@ def get_min_time_thread():
     time = 99999999
     link = None
     for i in threads_inst:
-        print(i)
+        #print(i)
         if i.get("time") <= time:
             time = i.get("time")
             link = i
@@ -89,21 +89,30 @@ for num, req in enumerate(req_list):
         t_sys.append(req.get_t0() + req.get_tobs())
     else:
         min_que = get_min_time_thread()
-        print(req.get_t0())
+        #print(req.get_t0())
         if min_que.get("time") < req.get_t0():
             t_wait.append(0)
             min_que['time'] = req.get_tobs() + req.get_t0()
             t_sys.append(min_que['time'])
             t_in.append(t_sys[num] - req.get_t0())
-            print('check1')
+            #print('check1')
             continue
         if min_que.get("time") > req.get_t0():
             t_wait.append(min_que.get('time') - req.get_t0())
             min_que["time"] = req.get_tobs() + t_wait[num]
             t_sys.append(min_que["time"])
-            t_in.append(t_sys[num] - req.get_t0())
-            print('check2')
+            t_in.append(t_wait[num] + req.get_tobs())
+            #print('check2')
             continue
 
 table_output(count=count, t0=[i.get_t0() for i in req_list], t_obs=[i.get_tobs() for i in req_list],
              t_wait=t_wait, t_in=t_in, t_sys=t_sys)
+
+T_WAIT = sum(t_wait) / count
+T_0 = sum([i._set_t0() for i in req_list]) / count
+T_OBS = sum([i._set_tobs() for i in req_list]) / count
+T_IN = sum(t_in) / count
+print(f"Среднее время прибытия = {T_0}\n"
+      f"Среднее время обслуживания = {T_OBS}\n"
+      f"Среднее время ожидания = {T_WAIT}\n"
+      f"Среднее время обслуживания = {T_IN}\n")
