@@ -10,6 +10,8 @@ def table_output(**kwargs):
     x.add_column("T_прибывания", kwargs.get("t_in"))
     x.add_column("T_системное", kwargs.get("t_sys"))
     x.add_column("T_обслуживания", kwargs.get("t_obs"))
+    # x.add_column("z", kwargs.get("z"))
+    # x.add_column("f(z)", kwargs.get("y"))
     print(x)
 
 

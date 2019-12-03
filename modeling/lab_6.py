@@ -15,11 +15,11 @@ class CalendarLine:
         self.t_obs = self._set_tobs()
 
     def _set_tobs(self):
-        a = -(self.mu * self.z)
+        a = (-self.mu * self.z)
         return 1 - e ** a
 
     def _set_t0(self):
-        a = -(self.lambd * self.z)
+        a = (-self.lambd * self.z)
         return 1 - e**a
 
     def get_tobs(self):
@@ -29,10 +29,10 @@ class CalendarLine:
         return self.t0
 
 
-threads = 1
-t_obs = 3.33
-queue = None
-lambd = 0.25
+threads = 2
+t_obs = 2
+queue = 4
+lambd = 1
 count = 500
 """
 :param threads: Кол-во потоков (Не меньше 1)
@@ -115,4 +115,4 @@ T_IN = sum(t_in) / count
 print(f"Среднее время прибытия = {T_0}\n"
       f"Среднее время обслуживания = {T_OBS}\n"
       f"Среднее время ожидания = {T_WAIT}\n"
-      f"Среднее время обслуживания = {T_IN}\n")
+      f"Среднее время пребывания = {T_IN}\n")
