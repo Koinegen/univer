@@ -29,10 +29,10 @@ class CalendarLine:
         return self.t0
 
 
-threads = 2
-t_obs = 2
-queue = 4
-lambd = 1
+threads = 1
+t_obs = 3.33
+queue = None
+lambd = 0.25
 count = 500
 """
 :param threads: Кол-во потоков (Не меньше 1)
@@ -47,7 +47,7 @@ count = 500
 
 def generate_list(count, lambd=1, t_obs=2):
     return_list = []
-    random_list = random(count=count)
+    random_list = random(count=count, after_dot=2)
     prev = 0
     for i in random_list:
         a = CalendarLine(i, prev, lambd=lambd, t_obs=t_obs)
