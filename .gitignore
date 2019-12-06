@@ -3,7 +3,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+.getkeep
 # Distribution / packaging
 .Python
 wheels/
