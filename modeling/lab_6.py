@@ -5,13 +5,14 @@ from univer.modeling.lib.lib_func_for_6_lab import table_output
 
 class CalendarLine:
 
-    def __init__(self, arr_time, prev_time=None, lambd = 1, t_obs=2):
+    def __init__(self, arr_time, prev_time=None, lambd=1, t_obs=2):
         self.z = arr_time
         self.lambd = lambd
         if prev_time == None:
             prev_time = 0
         self.t0 = self._set_t0() + prev_time
         self.mu = 1 / t_obs
+        self.p = lambd/self.mu
         self.t_obs = self._set_tobs()
 
     def _set_tobs(self):
@@ -29,10 +30,10 @@ class CalendarLine:
         return self.t0
 
 
-threads = 1
-t_obs = 3.33
+threads = 2
+t_obs = 2
 queue = None
-lambd = 0.25
+lambd = 1
 count = 500
 """
 :param threads: Кол-во потоков (Не меньше 1)
@@ -117,7 +118,7 @@ print(f"Среднее время прибытия = {T_0}\n"
       f"Среднее время ожидания = {T_WAIT}\n"
       f"Среднее время пребывания = {T_IN}\n")
 
-from univer.modeling.lib.xls_output import output_csv
-
-output_csv(T_0=[i.get_t0() for i in req_list], t_obs=[i._set_tobs() for i in req_list])
-print("done")
+# from univer.modeling.lib.xls_output import output_csv
+#
+# output_csv(T_0=[i.get_t0() for i in req_list], t_obs=[i._set_tobs() for i in req_list])
+# print("done")
