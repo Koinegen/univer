@@ -116,3 +116,8 @@ print(f"Среднее время прибытия = {T_0}\n"
       f"Среднее время обслуживания = {T_OBS}\n"
       f"Среднее время ожидания = {T_WAIT}\n"
       f"Среднее время пребывания = {T_IN}\n")
+
+from univer.modeling.lib.xls_output import output_csv
+
+output_csv(T_0=[i.get_t0() for i in req_list], t_obs=[i._set_tobs() for i in req_list])
+print("done")
