@@ -1,11 +1,11 @@
 from univer.modeling.lib.BRV import random
-from math import e
+from math import e, log
 from univer.modeling.lib.lib_func_for_6_lab import table_output
 
 
 class CalendarLine:
 
-    def __init__(self, arr_time, prev_time=None, lambd=1, t_obs=2):
+    def __init__(self, arr_time, prev_time=None, lambd: float=1, t_obs: float=3.6):
         self.z = arr_time
         self.lambd = lambd
         if prev_time == None:
@@ -16,12 +16,15 @@ class CalendarLine:
         self.t_obs = self._set_tobs()
 
     def _set_tobs(self):
-        a = (-self.mu * self.z)
-        return 1 - e ** a
+        # a = (-self.mu * self.z)
+        # return 1 - e ** a
+        return -(1/self.mu) * log(1-self.z)
+
 
     def _set_t0(self):
-        a = (-self.lambd * self.z)
-        return 1 - e**a
+        # a = (-self.lambd * self.z)
+        # return 1 - e**a
+        return -(1/self.lambd) * log(1-self.z)
 
     def get_tobs(self):
         return self.t_obs
@@ -46,9 +49,9 @@ count = 500
 """
 
 
-def generate_list(count, lambd=1, t_obs=2):
+def generate_list(count, lambd: float=1, t_obs:float=2):
     return_list = []
-    random_list = random(count=count, after_dot=2)
+    random_list = random(count=count, after_dot=3)
     prev = 0
     for i in random_list:
         a = CalendarLine(i, prev, lambd=lambd, t_obs=t_obs)
@@ -68,7 +71,7 @@ def create_threads(count=2):
 
 
 req_list = generate_list(count, lambd, t_obs)
-threads_inst = create_threads()
+threads_inst = create_threads(threads)
 
 
 def get_min_time_thread():
@@ -88,6 +91,7 @@ for num, req in enumerate(req_list):
         t_in.append(req.get_tobs())
         get_min_time_thread()["time"] = req.get_t0() + req.get_tobs()
         t_sys.append(req.get_t0() + req.get_tobs())
+        min_que = get_min_time_thread().get('time')
     else:
         min_que = get_min_time_thread()
         #print(req.get_t0())
@@ -95,19 +99,19 @@ for num, req in enumerate(req_list):
             t_wait.append(0)
             min_que['time'] = req.get_tobs() + req.get_t0()
             t_sys.append(min_que['time'])
-            t_in.append(t_sys[num] - req.get_t0())
+            t_in.append(req.get_tobs())
             #print('check1')
             continue
         if min_que.get("time") > req.get_t0():
             t_wait.append(min_que.get('time') - req.get_t0())
-            min_que["time"] = req.get_tobs() + t_wait[num]
+            min_que["time"] = req.get_tobs() + t_wait[num] + req.get_t0()
             t_sys.append(min_que["time"])
             t_in.append(t_wait[num] + req.get_tobs())
             #print('check2')
             continue
 
 table_output(count=count, t0=[i.get_t0() for i in req_list], t_obs=[i.get_tobs() for i in req_list],
-             t_wait=t_wait, t_in=t_in, t_sys=t_sys)
+             t_wait=t_wait, t_in=t_in, t_sys=t_sys, z=[i.z for i in req_list])
 
 T_WAIT = sum(t_wait) / count
 T_0 = sum([i._set_t0() for i in req_list]) / count
