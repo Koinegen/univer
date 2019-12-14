@@ -17,14 +17,14 @@ class CalendarLine:
         self.t_obs = self._set_tobs()
 
     def _set_tobs(self):
-        # a = (-self.mu * self.z)
-        # return 1 - e ** a
+        # a = (-self.mu * self.z1)
+        # return self.mu*(e ** a)
         return -(1/self.mu) * log(1-self.z1)
 
 
     def _set_t0(self):
         # a = (-self.lambd * self.z)
-        # return 1 - e**a
+        # return self.lambd*(e**a)
         return -(1/self.lambd) * log(1-self.z)
 
     def get_tobs(self):
