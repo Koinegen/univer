@@ -5,8 +5,9 @@ from univer.modeling.lib.lib_func_for_6_lab import table_output
 
 class CalendarLine:
 
-    def __init__(self, arr_time, prev_time=None, lambd: float=1, t_obs: float=3.6):
+    def __init__(self, arr_time, obs_time, prev_time=None, lambd: float=1, t_obs: float=3.6):
         self.z = arr_time
+        self.z1 = obs_time
         self.lambd = lambd
         if prev_time == None:
             prev_time = 0
@@ -18,7 +19,7 @@ class CalendarLine:
     def _set_tobs(self):
         # a = (-self.mu * self.z)
         # return 1 - e ** a
-        return -(1/self.mu) * log(1-self.z)
+        return -(1/self.mu) * log(1-self.z1)
 
 
     def _set_t0(self):
@@ -33,10 +34,10 @@ class CalendarLine:
         return self.t0
 
 
-threads = 2
-t_obs = 2
+threads = 1
+t_obs = 3.36
 queue = None
-lambd = 1
+lambd = 0.25
 count = 500
 """
 :param threads: Кол-во потоков (Не меньше 1)
@@ -51,10 +52,11 @@ count = 500
 
 def generate_list(count, lambd: float=1, t_obs:float=2):
     return_list = []
-    random_list = random(count=count, after_dot=3)
+    random_list_for_t0 = random(count=count, after_dot=3)
+    random_list_for_twait = random(count=count, after_dot=3)
     prev = 0
-    for i in random_list:
-        a = CalendarLine(i, prev, lambd=lambd, t_obs=t_obs)
+    for t0, tw in zip(random_list_for_t0, random_list_for_twait):
+        a = CalendarLine(t0, tw, prev, lambd=lambd, t_obs=t_obs)
         return_list.append(a)
         prev = a.get_t0()
     return return_list
@@ -64,7 +66,7 @@ t_wait = []
 t_in = []
 t_sys = []
 L = 0
-
+QUEUE = [] # {"time_in": t0, "time_out": sum(t_wait_prev)}
 
 def create_threads(count=2):
     return [{"time": 0} for _ in range(count)]
@@ -95,6 +97,9 @@ for num, req in enumerate(req_list):
     else:
         min_que = get_min_time_thread()
         #print(req.get_t0())
+        # if len(QUEUE) > 0:
+        #     wait_in_queue = sum([i.get('time_out') - i.get('time_in') for i in QUEUE])
+        #     print(wait_in_queue)
         if min_que.get("time") < req.get_t0():
             t_wait.append(0)
             min_que['time'] = req.get_tobs() + req.get_t0()
